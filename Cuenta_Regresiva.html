@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario 2026 - Terramar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Tipografías modernas -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --azul-oscuro: #030a22;
+            --azul-marino: #0a1a4a;
+            --azul-luminoso: #182b70;
+            --dorado-oscuro: #c89b3c;
+            --dorado-claro: #ffe29f;
+            --blanco: #ffffff;
+            --gris-claro: #d3d3d3;
+            --gris-medio: #9b9b9b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, var(--azul-luminoso) 0%, var(--azul-oscuro) 40%, var(--azul-marino) 100%);
+            color: var(--dorado-claro);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .contenido {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .marca {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.6rem, 6vw, 3.6rem);
+            letter-spacing: 0.38em;
+            text-transform: uppercase;
+            margin-bottom: 26px;
+            background: linear-gradient(120deg,
+                        var(--dorado-oscuro),
+                        var(--dorado-claro),
+                        var(--dorado-oscuro));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 28px rgba(255, 215, 112, 1);
+            animation: brillo 2.8s ease-in-out infinite,
+                       barrido 6s linear infinite;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.8rem, 5.5vw, 3.6rem);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin: 0;
+            color: var(--blanco);
+            text-shadow: 0 0 18px rgba(0,0,0,0.6);
+            animation: subir 0.9s ease-out, tituloBrillo 3s ease-in-out infinite;
+        }
+
+        .linea {
+            width: 90%;
+            max-width: 900px;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--dorado-claro), transparent);
+            margin: 14px auto 24px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 18px rgba(255, 230, 160, 1);
+        }
+
+        .fecha {
+            font-size: 1.3rem;
+            color: var(--gris-claro);
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .bloque-contador {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 30px;
+            border-radius: 50px;
+            background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(5, 15, 40, 0.9));
+            border: 1px solid rgba(255, 226, 159, 0.7);
+            box-shadow:
+                0 0 25px rgba(0, 0, 0, 0.7),
+                0 0 35px rgba(255, 230, 160, 0.45);
+        }
+
+        .faltan {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--dorado-claro);
+        }
+
+        #contador {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.2rem);
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: var(--blanco);
+            text-shadow: 0 0 28px rgba(255, 235, 170, 1);
+        }
+
+        .frase {
+            margin-top: 30px;
+            font-size: 1.25rem;
+            color: var(--dorado-claro);
+            font-weight: 300;
+            letter-spacing: 1px;
+            animation: fraseAparece 1.8s ease-out, frasePulso 3.5s ease-in-out infinite;
+            text-shadow: 0 0 10px rgba(255, 230, 160, 0.4);
+        }
+
+        footer {
+            padding: 10px 10px 18px;
+            font-size: 0.95rem;
+            color: var(--gris-medio);
+            text-align: center;
+        }
+
+        /* Overlay para móviles: botón grande para activar música */
+        .overlay-musica {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1000;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .overlay-contenido {
+            background: radial-gradient(circle at top, rgba(255,255,255,0.15), rgba(3,10,34,0.95));
+            border-radius: 24px;
+            border: 1px solid rgba(255, 226, 159, 0.9);
+            padding: 22px 26px;
+            max-width: 420px;
+            box-shadow:
+                0 0 25px rgba(0,0,0,0.8),
+                0 0 30px rgba(255, 226, 159, 0.7);
+        }
+
+        .overlay-titulo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            color: var(--blanco);
+            margin-bottom: 10px;
+        }
+
+        .overlay-texto {
+            font-size: 0.95rem;
+            color: var(--dorado-claro);
+            margin-bottom: 16px;
+        }
+
+        .overlay-boton {
+            padding: 10px 22px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(120deg, var(--dorado-oscuro), var(--dorado-claro));
+            color: #000;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow:
+                0 0 16px rgba(0,0,0,0.7),
+                0 0 18px rgba(255, 226, 159, 0.9);
+        }
+
+        .overlay-boton:active {
+            transform: scale(0.97);
+        }
+
+        @keyframes brillo {
+            0% { text-shadow: 0 0 14px rgba(255, 230, 160, 0.5); }
+            50% { text-shadow:
+                    0 0 40px rgba(255, 230, 160, 1),
+                    0 0 20px rgba(255, 215, 112, 1); }
+            100% { text-shadow: 0 0 14px rgba(255, 230, 160, 0.5); }
+        }
+
+        @keyframes barrido {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        @keyframes subir {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes tituloBrillo {
+            0% { text-shadow: 0 0 16px rgba(255, 235, 170, 0.4); }
+            50% { text-shadow:
+                    0 0 26px rgba(255, 235, 170, 0.9),
+                    0 0 14px rgba(0,0,0,0.9); }
+            100% { text-shadow: 0 0 16px rgba(255, 235, 170, 0.4); }
+        }
+
+        @keyframes fraseAparece {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes frasePulso {
+            0% { text-shadow: 0 0 8px rgba(255, 230, 160, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(255, 230, 160, 0.9); }
+            100% { text-shadow: 0 0 8px rgba(255, 230, 160, 0.3); }
+        }
+
+        @media (min-width: 900px) {
+            .contenido {
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+            .bloque-contador {
+                padding: 22px 40px;
+            }
+            .marca {
+                font-size: 3.8rem;
+            }
+            h1 {
+                font-size: 3.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MÚSICA DE FONDO -->
+    <audio id="musicaFondo" loop>
+        <source src="Energetic_MP3.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Overlay para activar música (especialmente móviles) -->
+    <div class="overlay-musica" id="overlayMusica">
+        <div class="overlay-contenido">
+            <div class="overlay-titulo">ACTIVA EL SONIDO</div>
+            <div class="overlay-texto">
+                Toca el botón para iniciar la música del conteo.<br>
+                <strong>Sube el volumen de tu dispositivo.</strong>
+            </div>
+            <button class="overlay-boton" id="btnActivarMusica">
+                INICIAR MÚSICA Y CONTEO
+            </button>
+        </div>
+    </div>
+
+    <div class="contenido" id="zonaCaptura">
+        <div class="marca">TERRAMAR BRANDS</div>
+
+        <h1>INVENTARIO ANUAL 2026</h1>
+        <div class="linea"></div>
+
+        <div class="fecha">10 de enero del 2026</div>
+
+        <div class="bloque-contador">
+            <div class="faltan">FALTAN:</div>
+            <div id="contador"></div>
+        </div>
+
+        <div class="frase" id="fraseTexto">“Juntos hacemos que todo cuente.”</div>
+    </div>
+
+    <footer>
+        Terramar Brands ©
+    </footer>
+
+    <script>
+        function actualizar() {
+            const fecha = new Date("2026-01-10T00:00:00").getTime();
+            const ahora = new Date().getTime();
+            const dif = fecha - ahora;
+
+            const contadorEl = document.getElementById("contador");
+            const faltanEl = document.querySelector(".faltan");
+            const fraseEl = document.getElementById("fraseTexto");
+
+            if (dif <= 0) {
+                contadorEl.innerHTML = "¡HOY HACEMOS QUE TODO CUENTE!";
+                contadorEl.style.fontSize = "1.6rem";
+                contadorEl.style.letterSpacing = "1px";
+
+                if (faltanEl) faltanEl.textContent = "HOY:";
+                if (fraseEl) fraseEl.textContent = "Gracias a todo el equipo por su esfuerzo.";
+
+                return;
+            }
+
+            const d = Math.floor(dif / (1000 * 60 * 60 * 24));
+            const h = Math.floor((dif % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((dif % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((dif % (1000 * 60)) / 1000);
+
+            contadorEl.innerHTML = `${d}D ${h}H ${m}M ${s}S`;
+        }
+
+        setInterval(actualizar, 1000);
+        actualizar();
+
+        // Lógica de música: botón para móviles / navegadores que bloquean autoplay
+        window.addEventListener("load", function () {
+            const audio = document.getElementById("musicaFondo");
+            const overlay = document.getElementById("overlayMusica");
+            const btn = document.getElementById("btnActivarMusica");
+            if (!audio || !overlay || !btn) return;
+
+            audio.volume = 0.15; // volumen bajo
+
+            const iniciarMusica = () => {
+                const playPromise = audio.play();
+                if (playPromise && playPromise.then) {
+                    playPromise.then(() => {
+                        overlay.style.display = "none";
+                    }).catch(() => {
+                        // Si falla, dejamos el overlay visible
+                    });
+                } else {
+                    overlay.style.display = "none";
+                }
+            };
+
+            // Intento de autoplay para escritorio
+            iniciarMusica();
+
+            // Botón para móviles / bloqueo
+            btn.addEventListener("click", function () {
+                iniciarMusica();
+            });
+        });
+    </script>
+
+</body>
+</html>
